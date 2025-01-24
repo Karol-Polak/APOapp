@@ -13,7 +13,7 @@ from menu_add import MenuBarAdd
 class ApoProjectCore(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Apo Project")
+        self.title("APO Project")
         self.geometry("800x600")
         self.loaded_image_data = None
         self.loaded_image_mode = None

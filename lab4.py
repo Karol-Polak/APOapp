@@ -100,9 +100,9 @@ class MenuBarLab4(tk.Menu):
                 laplacian_2 = np.array([[1, 1, 1], [1, -8, 1], [1, 1, 1]], dtype=np.float32)
                 laplacian_3 = np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]], dtype=np.float32)
 
-                tk.Button(kernel_window, text="Laplasjan 1", command=lambda: apply_sharpening(laplacian_1)).pack(pady=5)
-                tk.Button(kernel_window, text="Laplasjan 2", command=lambda: apply_sharpening(laplacian_2)).pack(pady=5)
-                tk.Button(kernel_window, text="Laplasjan 3", command=lambda: apply_sharpening(laplacian_3)).pack(pady=5)
+                tk.Button(kernel_window, text="Laplasjan 1 [0, 1, 0]", command=lambda: apply_sharpening(laplacian_1)).pack(pady=5)
+                tk.Button(kernel_window, text="Laplasjan 2 [1, 1, 1]", command=lambda: apply_sharpening(laplacian_2)).pack(pady=5)
+                tk.Button(kernel_window, text="Laplasjan 3 [0, -1, 0]", command=lambda: apply_sharpening(laplacian_3)).pack(pady=5)
 
             def edge_detection_operations():
                 """Perform directional edge detection using Sobel masks."""

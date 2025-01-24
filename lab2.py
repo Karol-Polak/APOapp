@@ -81,7 +81,7 @@ class MenuBarLab2(tk.Menu):
         self.add_command(label="Negacja", command=lambda: self.apply_point_operation(parent, "negate"))
         self.add_command(label="Redukcja poziomów szarości",
                          command=lambda: self.apply_point_operation_with_input(parent, "reduce_gray"))
-        self.add_command(label="Promowanie binarne",
+        self.add_command(label="Progowanie binarne",
                          command=lambda: self.apply_point_operation_with_input(parent, "binary_threshold"))
         self.add_command(label="Progowanie z zachowaniem poziomów szarości",
                          command=lambda: self.apply_point_operation_with_input(parent, "gray_threshold"))
