@@ -423,38 +423,54 @@ class MenuBarLab2(tk.Menu):
             messagebox.showwarning("Brak obrazu", "Najpierw wczytaj obraz.")
             return
 
+        # Pobierz dane obrazu
         img = np.array(parent.loaded_image_data[2])
 
-        if len(img.shape) != 2:
-            messagebox.showerror("Błąd", "Operacje punktowe są dostępne tylko dla obrazów w odcieniach szarości.")
-            return
+        # Funkcja pomocnicza - wykonanie operacji
+        def process_image(image, operation, param):
+            try:
+                if operation == "reduce_gray":
+                    return reduce_gray_levels(image, param)
+                elif operation == "binary_threshold":
+                    return binary_threshold(image, param)
+                elif operation == "gray_threshold":
+                    return gray_level_threshold(image, param)
+                else:
+                    raise ValueError(f"Nieznana operacja: {operation}")
+            except Exception as e:
+                raise RuntimeError(f"Błąd podczas przekształcania obrazu: {e}")
 
+        # Obsługa kliknięcia przycisku "Zastosuj"
         def on_submit():
             try:
                 param = int(entry.get())
-                if operation == "reduce_gray":
-                    result_img = reduce_gray_levels(img, param)
-                elif operation == "binary_threshold":
-                    result_img = binary_threshold(img, param)
-                elif operation == "gray_threshold":
-                    result_img = gray_level_threshold(img, param)
+
+                if len(img.shape) == 2:  # Obraz w odcieniach szarości
+                    result_img = process_image(img, operation, param)
+                elif len(img.shape) == 3:  # Obraz kolorowy
+                    # Operacja dla każdego kanału osobno
+                    result_img = np.stack(
+                        [process_image(img[:, :, c], operation, param) for c in range(img.shape[2])],
+                        axis=-1
+                    )
                 else:
-                    messagebox.showerror("Błąd", f"Nieznana operacja: {operation}")
-                    return
+                    raise ValueError("Nieobsługiwany format obrazu.")
 
                 # Wyświetl wynikowy obraz w nowej zakładce
                 from PIL import Image
-                result_pil = Image.fromarray(result_img)
+                result_pil = Image.fromarray(result_img.astype("uint8"))
                 parent.display_image(result_pil, f"Operacja ({operation})")
 
                 input_window.destroy()
             except Exception as e:
-                messagebox.showerror("Błąd", str(e))
+                messagebox.showerror("Błąd", f"Błąd operacji: {e}")
 
-        # Tworzenie okna wejściowego dla użytkownika
-        input_window = Toplevel(parent)
-        input_window.title(f"Parametr dla {operation}")
-        tk.Label(input_window, text="Podaj wartość:").pack(pady=5)
+        # Okno wejściowe do podania parametru
+        input_window = tk.Toplevel(parent)
+        input_window.title("Podaj parametr")
+        label = tk.Label(input_window, text=f"Podaj parametr dla operacji {operation}:")
+        label.pack(pady=10)
         entry = tk.Entry(input_window)
         entry.pack(pady=5)
-        tk.Button(input_window, text="OK", command=on_submit).pack(pady=5)
+        submit_btn = tk.Button(input_window, text="Zastosuj", command=on_submit)
+        submit_btn.pack(pady=10)
